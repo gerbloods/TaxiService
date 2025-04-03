@@ -39,6 +39,16 @@ export const getInfoDistrict = async (id_district) => {
     return data
 }
 
+export const getBestDriver = async () => {
+    const {data} = await $host.get('/ratingDrivers/bestdriver')
+    return data
+}
+
+export const getBestClient = async () => {
+    const {data} = await $host.get('/ratingClients/bestclient')
+    return data
+}
+
 export const newOrderFunction = async (id_client, id_category, id_driver, price, from_to, to_from) => {
     const {data} = await $host.post('/orders/neworder', {id_client, id_category, id_driver, price, from_to, to_from})
     return data
@@ -66,6 +76,16 @@ export const addBrandFunction = async (name) => {
 
 export const addDistrictFunction  = async (name) => {
     const {data} = await $host.post('/districts/addistrict', {name})
+    return data
+}
+
+export const addClientReviewFunction = async (id_order, id_client, rating) => {
+    const {data} = await $host.post('/ratingClients/addReview', {id_order, id_client, rating})
+    return data
+}
+
+export const addDriverReviewFunction = async (id_order, id_driver, rating) => {
+    const {data} = await $host.post('/ratingDrivers/addReview', {id_order, id_driver, rating})
     return data
 }
 

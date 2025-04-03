@@ -6,6 +6,7 @@ import MainComponent from './MainComponent';
 import OrderComponent from './OrderComponent';
 import SelectOrderComponent from './SelectOrderComponent';
 import ManageComponent from './ManageComponent';
+import RatingComponent from './RatingComponent';
 
 
 const AppRouter = () => {
@@ -17,6 +18,7 @@ const AppRouter = () => {
             <Route path="/" element={<MainComponent />} />
             <Route path="/orders" element={<CreateOrderComponent />} />
             <Route path="/manage" element={<ManageComponent />} />
+            <Route path='/reviews' element={<RatingComponent />} />
             <Route path="/orderinfo" element={<OrderComponent />} />
             <Route path="/orderinfo/:id" element={<SelectOrderComponent />} />
         </Routes>

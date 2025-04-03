@@ -111,6 +111,37 @@ app.get('/orders/getmoney', async (req, res) => {
     }
 })
 
+app.get('/ratingDrivers/bestdriver', async (req, res) => {
+    try {
+        const result = await sequelize.query(`
+            SELECT id_driver, avg(rating) FROM public.rating_drivers
+            GROUP BY id_driver
+            ORDER BY avg(rating) DESC
+            LIMIT 1;
+        `);
+        res.status(200).send(result);
+    } catch (error) {
+        console.log('ERROR: ', error)
+        res.status(500).send('Ошибка сервера')
+    }
+})
+
+app.get('/ratingClients/bestclient', async (req, res) => {
+    try {
+        const result = await sequelize.query(`
+            SELECT id_client, avg(rating) FROM public.rating_clients
+            GROUP BY id_client
+            ORDER BY avg(rating) DESC
+            LIMIT 1;
+        `);
+        res.status(200).send(result);
+    } catch (error) {
+        console.log('ERROR: ', error)
+        res.status(500).send('Ошибка сервера')
+    }
+})
+
+
 app.post('/orders/neworder', async (req, res) => {
     try {
         const { id_client, id_category, id_driver, price, from_to, to_from } = req.body
@@ -382,4 +413,49 @@ app.post("/districts/addistrict", async (req, res) => {
     }
 })
 
+app.post('/ratingClients/addReview', async (req, res) => {
+    try {
+        const { id_order, id_client, rating } = req.body
+
+        if (!id_order || !id_client || !rating) {
+            return res.status(400).json({ message: 'Заполните все поля' });
+        }
+
+        const result = await sequelize.query(
+            `INSERT INTO rating_clients(id_order, id_client, rating) VALUES (?, ?, ?) RETURNING *`, 
+            {
+                replacements: [id_order, id_client, rating],
+                type: sequelize.QueryTypes.INSERT,
+            }
+        )
+        res.status(200).json({ message: 'Отзыв добавлен' });
+
+    } catch (error) {
+        console.error('ERROR:', error);
+        res.status(500).send('Ошибка сервера');
+    }
+})
+
+app.post('/ratingDrivers/addReview', async (req, res) => {
+    try {
+        const { id_order, id_driver, rating } = req.body
+
+        if (!id_order || !id_driver || !rating) {
+            return res.status(400).json({ message: 'Заполните все поля' });
+        }
+
+        const result = await sequelize.query(
+            `INSERT INTO rating_drivers(id_order, id_driver, rating) VALUES (?, ?, ?) RETURNING *`, 
+            {
+                replacements: [id_order, id_driver, rating],
+                type: sequelize.QueryTypes.INSERT,
+            }
+        )
+        res.status(200).json({ message: 'Отзыв добавлен' });
+
+    } catch (error) {
+        console.error('ERROR:', error);
+        res.status(500).send('Ошибка сервера');
+    }
+})
 

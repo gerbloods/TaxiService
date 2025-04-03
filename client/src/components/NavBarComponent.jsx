@@ -15,8 +15,8 @@ const NavBar = ( ) => {
                     <Nav>
                         <Nav.Link onClick={() => navigate('/')}>Главная</Nav.Link>
                         <Nav.Link onClick={() => navigate('/manage')}>Управление</Nav.Link>
-                        <Nav.Link onClick={() => navigate('/')}>Отзывы</Nav.Link>
-                        <Nav.Link onClick={() => navigate('/orders')}>Создание заказа</Nav.Link>
+                        <Nav.Link onClick={() => navigate('/reviews')}>Отзывы</Nav.Link>
+                        <Nav.Link onClick={() => navigate('/orders')}>Заказы</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
