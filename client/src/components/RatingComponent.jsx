@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Form, Button, Card, Container } from "react-bootstrap";
 import NavBar from "./NavBarComponent";
-import { addClientReviewFunction, addDriverReviewFunction, getBestClient, getBestDriver, getInfoClients, getInfoDrivers } from "./mainQuery";
+import { addClientReviewFunction, addDriverReviewFunction, getBestClient, getBestDriver, getInfoClients, getInfoDrivers, getRatingClient, getRatingDriver } from "./mainQuery";
 import ReviewComponent from "./ReviewComponent";
 
 const RatingComponent = () => {
@@ -16,15 +16,19 @@ const RatingComponent = () => {
     const [bestClient, setBestClient] = useState(null);
     const [drivers, setDrivers] = useState([])
     const [clients, setClients] = useState([])
+    const [ratingDriver, setRatingDriver] = useState([])
+    const [ratingClient, setRatingClient] = useState([])
 
     const submitDriverRating = (id_order, id_driver, rating) => {
         if(!id_order || !id_driver || !rating) return alert('Поля не заполнены')
+        if(rating > 5) return alert('Оценка больше 5!')
         addDriverReviewFunction(id_order, id_driver, rating)
         alert('Отзыв отправлен')
     };
 
     const submitClientRating = (id_order, id_client, rating) => {
         if(!id_order || !id_client || !rating) return alert('Поля не заполнены')
+        if(rating > 5) return alert('Оценка больше 5!')
         addClientReviewFunction(id_order, id_client, rating)
         alert('Отзыв отправлен')
     };
@@ -34,15 +38,17 @@ const RatingComponent = () => {
         getBestClient().then((data) => setBestClient(data));
         getInfoDrivers().then((data) => setDrivers(data[0]));
         getInfoClients().then((data) => setClients(data[0]));
+        getRatingClient().then((data) => setRatingClient(data[0]));
+        getRatingDriver().then((data) => setRatingDriver(data[0]));
     }, [])
     const [showReviews, setShowReviews] = useState(null)
 
     const handleShowDriverReviews = () => {
-        setShowReviews(drivers);
+        setShowReviews(ratingDriver);
     };
 
     const handleShowClientReviews = () => {
-        setShowReviews(clients);
+        setShowReviews(ratingClient);
     };
 
     return (
@@ -69,7 +75,7 @@ const RatingComponent = () => {
                                             <Form.Label>Оценка</Form.Label>
                                             <Form.Control min="1" max="5" type="number" onChange={(e) => setDrMark(e.target.value)} required />
                                         </Form.Group>
-                                        <Button className="mt-2" onClick={submitDriverRating}>
+                                        <Button className="mt-2" onClick={() => submitDriverRating(drOrder, drId, drMark)}>
                                             Отправить
                                         </Button>
                                     </Card>
@@ -90,7 +96,7 @@ const RatingComponent = () => {
                                             <Form.Label>Оценка</Form.Label>
                                             <Form.Control min="1" max="5" type="number" onChange={(e) => setClMark(e.target.value)} required />
                                         </Form.Group>
-                                        <Button className="mt-2" onClick={submitClientRating}>
+                                        <Button className="mt-2" onClick={() => submitClientRating(clOrder, clId, clMark)}>
                                             Отправить
                                         </Button>
                                     </Card>

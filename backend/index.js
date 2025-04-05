@@ -141,6 +141,33 @@ app.get('/ratingClients/bestclient', async (req, res) => {
     }
 })
 
+app.get('/ratingclients/infoclients', async (req, res) => {
+    try {
+        const result = await sequelize.query(`
+            SELECT id_client, avg(rating) as rating FROM public.rating_clients
+            GROUP BY id_client
+            ORDER BY avg(rating) DESC
+        `);
+        res.status(200).send(result);
+    } catch (error) {
+        console.log('ERROR: ', error)
+        res.status(500).send('Ошибка сервера')
+    }
+})
+
+app.get('/ratingdrivers/infodrivers', async (req, res) => {
+    try {
+        const result = await sequelize.query(`
+            SELECT id_driver, avg(rating) as rating FROM public.rating_drivers
+            GROUP BY id_driver
+            ORDER BY avg(rating) DESC
+        `);
+        res.status(200).send(result);
+    } catch (error) {
+        console.log('ERROR: ', error)
+        res.status(500).send('Ошибка сервера')
+    }
+})
 
 app.post('/orders/neworder', async (req, res) => {
     try {
@@ -421,6 +448,10 @@ app.post('/ratingClients/addReview', async (req, res) => {
             return res.status(400).json({ message: 'Заполните все поля' });
         }
 
+        if(rating > 5) {
+            return res.status(400).json({ message: 'Рейтинг больше 5!' });
+        }
+
         const result = await sequelize.query(
             `INSERT INTO rating_clients(id_order, id_client, rating) VALUES (?, ?, ?) RETURNING *`, 
             {
@@ -442,6 +473,10 @@ app.post('/ratingDrivers/addReview', async (req, res) => {
 
         if (!id_order || !id_driver || !rating) {
             return res.status(400).json({ message: 'Заполните все поля' });
+        }
+        
+        if(rating > 5) {
+            return res.status(400).json({ message: 'Рейтинг больше 5!' });
         }
 
         const result = await sequelize.query(

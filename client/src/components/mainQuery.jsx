@@ -49,6 +49,16 @@ export const getBestClient = async () => {
     return data
 }
 
+export const getRatingDriver = async () => {
+    const {data} = await $host.get('/ratingdrivers/infodrivers')
+    return data
+}
+
+export const getRatingClient = async () => {
+    const {data} = await $host.get('/ratingclients/infoclients')
+    return data
+}
+
 export const newOrderFunction = async (id_client, id_category, id_driver, price, from_to, to_from) => {
     const {data} = await $host.post('/orders/neworder', {id_client, id_category, id_driver, price, from_to, to_from})
     return data
